@@ -1,0 +1,6 @@
+body, input { font-size: 2rem; }
+.loginBox {
+  position: absolute;
+  top: 50%;
+  left: 40%;
+}

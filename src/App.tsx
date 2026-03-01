@@ -1,41 +1,47 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import "./styles/styles.css";
 
 export default function App() {
-  const [visits, setVisits] = useState(0);
-  const [name, setName] = useState('');
-
-  // Memoization
-  const refreshVisits = useCallback(async () => {
-    console.log('Test refresh');
-    const url = 'http://localhost:3000/data';
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log(data);
-    setVisits(data.visits);
-  }, []);
-
-  useEffect(() => {
-    refreshVisits();
-  }, [refreshVisits]);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <>
-      <h1>Welcome {name}</h1>
-      <input value={name} onChange={(event) => {
-        setName(event.target.value);
-      }} />
-      <button onClick={async () => {
-        const url = 'http://localhost:3000/visit';
-        const init = {
-          method: 'POST'
-        };
-        const response = await fetch(url, init);
-        const data = await response.json();
-        console.log(data);
-      }}>Add visit</button>
-
-      <button onClick={refreshVisits}>Refresh visits</button>
-      <p>Number of visits: {visits}</p>
+      <div className="loginBox">
+        Username:
+        <input
+          onChange={(event) => {
+            setUsername(event.target.value);
+          }}
+        />
+        <br />
+        Password:
+        <input
+          onChange={(event) => {
+            setPassword(event.target.value);
+          }}
+        />
+        <br />
+        <button
+          onClick={async () => {
+            const url = "http://localhost:4000/users/login";
+            const init = {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username, password }),
+            };
+            const response = await fetch(url, init);
+            console.log("Token:", response);
+            const data = await response.json();
+            console.log("data", data);
+            localStorage.setItem("token", data.token);
+          }}
+        >
+          Submit
+        </button>
+      </div>
     </>
-  )
+  );
 }
