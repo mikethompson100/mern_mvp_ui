@@ -5,24 +5,40 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   return (
     <>
+    <main>
+    <h1>Login page</h1>
       <div className="loginBox">
-        Username:
-        <input
-          onChange={(event) => {
-            setUsername(event.target.value);
-          }}
-        />
-        <br />
-        Password:
-        <input
-          onChange={(event) => {
-            setPassword(event.target.value);
-          }}
-        />
+        <form>
+          <label>
+            Username:
+            <input
+              id="username"
+              value={username}
+              onChange={(event) => {
+                setUsername(event.target.value);
+              }}
+              required
+            />
+          </label>
+          <br />
+          <label>
+            Password:
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(event) => {
+                setPassword(event.target.value);
+              }}
+              required
+            />
+          </label>
+        </form>
         <br />
         <button
           onClick={async () => {
@@ -36,6 +52,13 @@ function Login() {
             };
             const response = await fetch(url, init);
             const data = await response.json();
+
+            if (!response.ok) {
+              setError(data.message);
+              setPassword("");
+              return;
+            }
+
             localStorage.setItem("token", data.token);
             navigate("/dashboard");
           }}
@@ -54,12 +77,23 @@ function Login() {
             };
             const response = await fetch(url, init);
             const data = await response.json();
+
+            if (!response.ok) {
+              setError(data.message); // show backend message
+              setUsername("");
+              setPassword("");
+              return;
+            }
+
             localStorage.setItem("token", data.token);
+            navigate("/dashboard");
           }}
         >
           Register
         </button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
+      </main>
     </>
   );
 }
