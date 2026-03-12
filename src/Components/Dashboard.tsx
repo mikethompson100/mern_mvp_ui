@@ -59,18 +59,22 @@ function DashBoard() {
           id="count"
           onClick={async () => {
             const newCount = user.count + 1;
-            setUser({ ...user, count: newCount });
             const url = "http://localhost:4000/users/count";
             const init = {
               method: "PATCH",
               headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
               },
-              body: JSON.stringify({ username: user.username, count: newCount })
+              body: JSON.stringify({
+                username: user.username,
+                count: newCount,
+              }),
             };
             const response = await fetch(url, init);
-            const data = await response.json();
-            console.log("DATA", data)
+            if (!response.ok) {
+              throw new Error("Unable to increment count");
+            }
+            setUser({ ...user, count: newCount });
           }}
         >
           Add 1 to counter
