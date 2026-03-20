@@ -96,6 +96,12 @@ function Login() {
           </form>
           {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
+        <div>
+          <button onClick={ async () => {
+            //await fetch("http://localhost:4000/users/google")
+            window.location.href = "http://localhost:4000/users/google";
+          }}>Login with Google</button>
+        </div>
       </main>
     </>
   );
